@@ -253,7 +253,7 @@
         item("Frango Assado", "MARMITEX", [{t:"P",p:23},{t:"G",p:26}]),
         item("Linguica", "MARMITEX", [{t:"P",p:23},{t:"G",p:26}]),
         // FEIJOADA
-        item("Feijoada Light", "FEIJOADA LIGHT", [{t:"P",p:35},{t:"M",p:65},{t:"G",p:95}], "Acompanha Farofa, Couve, Torresmo, vinagrete, bisteca, banana, gomo de laranja, molho de pimenta e caipirinha. (S�bados)"),
+        item("Feijoada Light", "FEIJOADA LIGHT", [{t:"P",p:35},{t:"M",p:65},{t:"G",p:95}], "Acompanha Farofa, Couve, Torresmo, vinagrete, bisteca, banana, gomo de laranja, molho de pimenta e caipirinha. (Sabados)"),
         // MASSAS
         item("Rondelli Presunto e Queijo", "MASSAS ITALIANAS", [{t:"unico",p:30}]),
         item("Rondelli Verde 4 Queijos", "MASSAS ITALIANAS", [{t:"unico",p:31.5}]),
@@ -443,7 +443,7 @@
           } else {
             // se tiver m�ltiplos tamanhos, adiciona primeiro
             const v0 = it.variants[0];
-            addToCart(it, v0.t || "�nico", v0.p);
+            addToCart(it, v0.t || "unico", v0.p);
           }
           updateFav();
         });
@@ -493,8 +493,8 @@
         row.innerHTML = `
           <div class="flex items-start justify-between gap-3">
             <div>
-              <p class="font-semibold">${ci.name} <span class="text-xs text-[var(--muted)]">${ci.variant? `� ${ci.variant}`:""}</span></p>
-              <p class="text-sm text-[var(--muted)]">Unit�rio: ${fmt(ci.price)}</p>
+              <p class="font-semibold">${ci.name} <span class="text-xs text-[var(--muted)]">${ci.variant? ` ${ci.variant}`:""}</span></p>
+              <p class="text-sm text-[var(--muted)]">Unitario: ${fmt(ci.price)}</p>
             </div>
             <div class="flex items-center gap-2">
               <button class="btnDec w-8 h-8 rounded-lg bg-white/5 border border-white/10">-</button>
@@ -539,19 +539,19 @@
       lines.push(`?? Pedido - ${DB.restaurant.name}`);
       lines.push(`----------------------`);
       cart.forEach(ci=>{
-        lines.push(`� ${ci.name} ${ci.variant? '('+ci.variant+') ':''}x${ci.qty} - ${fmt(ci.price*ci.qty)}`);
+        lines.push(` ${ci.name} ${ci.variant? '('+ci.variant+') ':''}x${ci.qty} - ${fmt(ci.price*ci.qty)}`);
       });
       const sub = cart.reduce((s,c)=>s+c.price*c.qty,0);
       const fee = calcFee(bairroSel.value);
       lines.push(`Subtotal: ${fmt(sub)}`);
-      lines.push(`Entrega (${bairroSel.value||'�'}): ${fmt(fee)}`);
+      lines.push(`Entrega (${bairroSel.value||''}): ${fmt(fee)}`);
       lines.push(`Total: ${fmt(sub+fee)}`);
       lines.push(`----------------------`);
-      lines.push(`Cliente: ${nomeInp.value||'�'}`);
-      lines.push(`Telefone: ${telInp.value||'�'}`);
-      lines.push(`Endere�o: ${ruaInp.value||'�'}, ${numeroInp.value||'�'}`);
-      lines.push(`Refer�ncia: ${refInp.value||'�'}`);
-      lines.push(`Pagamento: ${pagamentoSel.value||'�'}` + (pagamentoSel.value==="Dinheiro" && trocoInp.value? ` (Troco: ${trocoInp.value})`:""));
+      lines.push(`Cliente: ${nomeInp.value||''}`);
+      lines.push(`Telefone: ${telInp.value||''}`);
+      lines.push(`Endereco: ${ruaInp.value||''}, ${numeroInp.value||''}`);
+      lines.push(`Referencia: ${refInp.value||''}`);
+      lines.push(`Pagamento: ${pagamentoSel.value||''}` + (pagamentoSel.value==="Dinheiro" && trocoInp.value? ` (Troco: ${trocoInp.value})`:""));
       return lines.join('%0A');
     }
 
@@ -651,7 +651,7 @@
           saveData(); renderCategories(); renderMenu(); toastMsg("Categoria atualizada");
         });
         li.querySelector('.btnDel').addEventListener('click', ()=>{
-          if(!confirm("Excluir categoria e seus v�nculos?")) return;
+          if(!confirm("Excluir categoria e seus vinculos?")) return;
           DB.items = DB.items.filter(it=>it.category!==c.name);
           DB.categories = DB.categories.filter(x=>x.id!==c.id);
           saveData(); buildAdmin(); renderCategories(); renderMenu(); toastMsg("Categoria exclu�da");
@@ -680,8 +680,8 @@
             <select class="iCat w-full rounded bg-white/5 border border-white/10 px-2 py-1">
               ${DB.categories.map(c=>`<option ${c.name===it.category?'selected':''}>${c.name}</option>`).join("")}
             </select>
-            <input class="iNote w-full rounded bg-white/5 border border-white/10 px-2 py-1" placeholder="Observa��o (opcional)" value="${it.note||''}" />
-            <input class="iVar w-full rounded bg-white/5 border border-white/10 px-2 py-1 text-sm" placeholder="Formatos: Tamanho|Pre�o,..." value="${variantsStr}" />
+            <input class="iNote w-full rounded bg-white/5 border border-white/10 px-2 py-1" placeholder="Observacao (opcional)" value="${it.note||''}" />
+            <input class="iVar w-full rounded bg-white/5 border border-white/10 px-2 py-1 text-sm" placeholder="Formatos: Tamanho|Preco,..." value="${variantsStr}" />
             <div class="flex gap-2">
               <button class="save btn px-3 py-2 rounded bg-[var(--accent)] text-black">Salvar</button>
               <button class="del btn px-3 py-2 rounded bg-[var(--danger)]">Excluir</button>
@@ -694,7 +694,7 @@
           it.note = wrap.querySelector('.iNote').value.trim();
           const vs = wrap.querySelector('.iVar').value.split(',').map(s=>s.trim()).filter(Boolean).map(p=>{
             const [t,price] = p.split('|');
-            return {t:t||"�nico", p: Number(price)||0};
+            return {t:t||"unico", p: Number(price)||0};
           });
           if(vs.length===0){ toastMsg("Adicione ao menos um formato"); return }
           it.variants = vs;
@@ -776,3 +776,4 @@
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97eac551055bcb3d',t:'MTc1Nzc5OTI4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 
 </html>
+
